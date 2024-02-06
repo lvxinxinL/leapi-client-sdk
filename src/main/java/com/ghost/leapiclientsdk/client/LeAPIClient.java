@@ -22,6 +22,8 @@ public class LeAPIClient {
     private String accessKey;
     private String secretKey;
 
+    private static final String GATEWAY_HOST = "http://localhost:8103";// 请求网关，网关再将请求转发到真实接口地址
+
     public LeAPIClient(String accessKey, String secretKey) {
         this.accessKey = accessKey;
         this.secretKey = secretKey;
@@ -31,7 +33,7 @@ public class LeAPIClient {
         //可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
         HashMap<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put("name", name);
-        String result = HttpUtil.get("http://localhost:8102/api/name/", paramMap);
+        String result = HttpUtil.get(GATEWAY_HOST + "/api/name/", paramMap);
         System.out.println(result);
         return result;
     }
@@ -39,7 +41,7 @@ public class LeAPIClient {
     public String getNameByPost(String name) {
         HashMap<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put("name", name);
-        String result = HttpUtil.post("http://localhost:8102/api/name/", paramMap);
+        String result = HttpUtil.post(GATEWAY_HOST + "/api/name/", paramMap);
         System.out.println(result);
         return result;
     }
@@ -64,7 +66,7 @@ public class LeAPIClient {
 
     public String getNameByJSON(User user) {
         String userStr = JSONUtil.toJsonStr(user);
-        HttpResponse httpResponse = HttpRequest.post("http://localhost:8102/api/name/user")
+        HttpResponse httpResponse = HttpRequest.post(GATEWAY_HOST + "/api/name/user")
                 .addHeaders(headerMap(userStr))// 客户端在请求头中携带签名
                 .body(userStr)
                 .execute();
