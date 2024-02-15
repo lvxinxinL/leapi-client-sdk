@@ -1,5 +1,6 @@
 package com.ghost.leapiclientsdk.client;
 
+import cn.hutool.core.net.URLEncodeUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
@@ -7,9 +8,9 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.ghost.leapiclientsdk.model.User;
 import com.ghost.leapiclientsdk.utils.SignUtil;
-
 import java.util.HashMap;
 import java.util.Map;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 
 /**
@@ -58,7 +59,7 @@ public class LeAPIClient {
         // 一定不能发送给后端！
 //        hashMap.put("secretKey", secretKey);
         hashMap.put("nonce", RandomUtil.randomNumbers(5));
-        hashMap.put("body", body);
+        hashMap.put("body", URLEncodeUtil.encode(body, UTF_8));// 解决中文乱码
         hashMap.put("timestamp", String.valueOf(System.currentTimeMillis() / 1000));
         hashMap.put("sign", SignUtil.genSign(body, secretKey));
         return hashMap;
